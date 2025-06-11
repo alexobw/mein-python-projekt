@@ -14,16 +14,20 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    structure_path = Path("data/strukturen/grundstruktur.md")
+    # Ermittle Projektwurzel relativ zu dieser Datei, damit das Skript
+    # auch von anderen Arbeitsverzeichnissen aufgerufen werden kann.
+    project_root = Path(__file__).resolve().parent.parent
+
+    structure_path = project_root / "data" / "strukturen" / "grundstruktur.md"
     structure_text = load_markdown(structure_path)
-    strategy_text = load_markdown(STRATEGY_MAP[args.strategy])
-    task_text = load_markdown(TASK_MAP[args.task])
+    strategy_text = load_markdown(project_root / STRATEGY_MAP[args.strategy])
+    task_text = load_markdown(project_root / TASK_MAP[args.task])
 
     builder = PromptBuilder(structure_text)
     prompt = builder.build_prompt(task_text, strategy_text)
 
     # Ausgabeordnerstruktur: output/<strategy>/
-    base_output = Path("output") / args.strategy
+    base_output = project_root / "output" / args.strategy
     base_output.mkdir(parents=True, exist_ok=True)
 
     output_file = base_output / f"{args.strategy}__{args.task}.md"
