@@ -1,14 +1,39 @@
 # Mein Python Projekt
 
-Dieses Projekt erstellt automatisch Prompts basierend auf verschiedenen Aufgaben und Strategien.
+Dieses Repository erzeugt Prompts für verschiedene Migrationsaufgaben und lässt sie von Sprachmodellen beantworten.
 
-## Vorbereitung
-Alle benötigten Eingabedateien befinden sich im Ordner `data`.
+## Ablauf
 
-## Ausführen
+1. **Prompt erstellen**
+   ```bash
+   python run.py --strategy <strategie> --task <aufgabe> --data local
+   ```
+   Das Skript ruft `src.main.main` auf und schreibt den fertigen Prompt nach `output/<strategie>/<strategie>__<aufgabe>.md`.
+
+2. **Prompt ausführen**
+   ```bash
+   python -m src.prompt_runner --api <openai|claude|gemini>
+   ```
+   `src/prompt_runner.py` liest alle Dateien im `output`-Ordner ein, schickt sie über die gewählte API ab und speichert die Antworten unter `responses/<api>/<strategie>/<strategie>__<aufgabe>.md`.
+
+## Benötigte Umgebungsvariablen
+
+Die API-Schlüssel werden aus einer `.env`-Datei geladen. Je nach verwendeter API müssen folgende Variablen gesetzt sein:
+
+- `OPENAI_API_KEY` für OpenAI
+- `ANTHROPIC_API_KEY` für Claude
+- `GEMINI_API_KEY` für Google Gemini
+
+## Ordnerstruktur
+
 ```
-python run.py --strategy <strategie> --task <aufgabe>
+output/
+  <strategie>/
+    <strategie>__<aufgabe>.md
+responses/
+  <api>/
+    <strategie>/
+      <strategie>__<aufgabe>.md
 ```
-Verfügbare Strategien sind in `src/config/strategy_map.py` aufgeführt, mögliche Aufgaben in `src/config/task_map.py`.
 
-Die generierten Prompts werden im Ordner `output/<strategie>` gespeichert.
+Damit arbeiten `run.py` und `src/prompt_runner.py` zusammen: Erst erzeugt `run.py` die Prompt-Dateien im `output`-Verzeichnis, anschließend holt sich `prompt_runner.py` diese Dateien und legt die Modellantworten im `responses`-Verzeichnis ab.
