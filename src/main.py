@@ -10,7 +10,6 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Baue LLM-Prompt aus Aufgabe und Strategie.")
     parser.add_argument("--strategy", required=True, choices=list(STRATEGY_MAP.keys()))
     parser.add_argument("--task", required=True, choices=list(TASK_MAP.keys()))
-    parser.add_argument("--data", required=True, choices=["local", "remote"])
 
     args = parser.parse_args()
 
