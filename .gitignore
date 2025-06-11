@@ -1,0 +1,12 @@
+# Bytecode-Dateien
+__pycache__/
+*.pyc
+
+# Virtuelle Umgebungen
+.venv/
+
+# Umgebungsvariablen
+.env
+
+# Logdateien
+*.log
