@@ -4,17 +4,17 @@ Dieses Repository erzeugt Prompts für verschiedene Migrationsaufgaben und läss
 
 ## Ablauf
 
-1. **Prompt erstellen**
+1. **Prompts erstellen**
    ```bash
-   python run.py --strategy <strategie> --task <aufgabe> --data local
+   python prompt_builder.py
    ```
-   Das Skript ruft `src.main.main` auf und schreibt den fertigen Prompt nach `output/<strategie>/<strategie>__<aufgabe>.md`.
+   Das Skript erzeugt alle Kombinationen aus Strategie und Aufgabe und legt sie unter `output/<strategie>/<strategie>__<aufgabe>.md` ab.
 
-2. **Prompt ausführen**
+2. **Prompts ausführen**
    ```bash
-   python -m src.prompt_runner --api <openai|claude|gemini>
+   python prompt_runner.py --api <openai|claude|gemini>
    ```
-   `src/prompt_runner.py` liest alle Dateien im `output`-Ordner ein, schickt sie über die gewählte API ab und speichert die Antworten unter `responses/<api>/<strategie>/<strategie>__<aufgabe>.md`.
+   `src/prompt_runner.py` liest alle Dateien im `output`-Ordner ein, schickt sie über die gewählte API ab und speichert die Antworten unter `responses/<api>/<prompt>-response.md`.
 
 ## Benötigte Umgebungsvariablen
 
@@ -32,8 +32,7 @@ output/
     <strategie>__<aufgabe>.md
 responses/
   <api>/
-    <strategie>/
-      <strategie>__<aufgabe>.md
+    <prompt>-response.md
 ```
 
-Damit arbeiten `run.py` und `src/prompt_runner.py` zusammen: Erst erzeugt `run.py` die Prompt-Dateien im `output`-Verzeichnis, anschließend holt sich `prompt_runner.py` diese Dateien und legt die Modellantworten im `responses`-Verzeichnis ab.
+Damit arbeiten `prompt_builder.py` und `prompt_runner.py` zusammen: Erst erzeugt `prompt_builder.py` die Prompt-Dateien im `output`-Verzeichnis, anschließend holt sich `prompt_runner.py` diese Dateien und legt die Modellantworten im `responses`-Verzeichnis ab.

@@ -1,4 +1,5 @@
 import argparse
+import logging
 from pathlib import Path
 
 from src.loader import load_markdown
@@ -19,21 +20,27 @@ def main() -> None:
     )
     args = parser.parse_args()
 
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+    )
+
     api = ModelAPI()
     query_fn = getattr(api, f"query_{args.api}")
 
     for prompt_file in gather_prompt_files(Path("output")):
-        prompt_text = load_markdown(prompt_file)
-        strategy = prompt_file.parent.name
-        task = prompt_file.stem.split("__", 1)[1]
+        logging.info("Sende Prompt %s an %s", prompt_file.name, args.api)
+        try:
+            prompt_text = load_markdown(prompt_file)
+            response_text = query_fn(prompt_text)
 
-        response_text = query_fn(prompt_text)
-
-        out_dir = Path("responses") / args.api / strategy
-        out_dir.mkdir(parents=True, exist_ok=True)
-        out_path = out_dir / f"{strategy}__{task}.md"
-        out_path.write_text(response_text, encoding="utf-8")
-        print(f"✅ Antwort gespeichert unter: {out_path.resolve()}")
+            out_dir = Path("responses") / args.api
+            out_dir.mkdir(parents=True, exist_ok=True)
+            out_path = out_dir / f"{prompt_file.stem}-response.md"
+            out_path.write_text(response_text, encoding="utf-8")
+            logging.info("Antwort gespeichert unter: %s", out_path.resolve())
+        except Exception as exc:
+            logging.exception("Fehler bei Verarbeitung von %s: %s", prompt_file, exc)
 
 
 if __name__ == "__main__":
