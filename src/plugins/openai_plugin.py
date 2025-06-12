@@ -31,6 +31,7 @@ class OpenAIPlugin(BaseModelPlugin):
             response = self._client.chat.completions.create(
                 model="gpt-4o",
                 messages=[{"role": "user", "content": prompt}],
+                temperature=0.0
             )
             return response.choices[0].message.content.strip()
         except Exception as exc:  # noqa: BLE001

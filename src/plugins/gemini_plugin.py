@@ -24,12 +24,15 @@ class GeminiPlugin(BaseModelPlugin):
         if not GEMINI_API_KEY:
             raise ValueError("GEMINI_API_KEY not set")
         genai.configure(api_key=GEMINI_API_KEY)
-        self._model = genai.GenerativeModel("gemini-1.5-pro-latest")
+        self._model = genai.GenerativeModel("gemini-2.5-pro-preview-06-05")
 
     def query(self, prompt: str) -> str:
         logger.debug("Querying Gemini")
         try:
-            response = self._model.generate_content(prompt)
+            response = response = self._model.generate_content(
+                prompt,
+                generation_config={"temperature": 0.0},
+            )
             return response.text.strip()
         except Exception as exc:  # noqa: BLE001
             logger.exception("Gemini request failed: %s", exc)

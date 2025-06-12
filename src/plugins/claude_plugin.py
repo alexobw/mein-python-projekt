@@ -30,8 +30,9 @@ class ClaudePlugin(BaseModelPlugin):
         try:
             response = self._client.messages.create(
                 model="claude-3-7-sonnet-20250219",
-                max_tokens=2048,
+                max_tokens=10000,
                 messages=[{"role": "user", "content": prompt}],
+                temperature=0.0
             )
             return response.content[0].text.strip()
         except Exception as exc:  # noqa: BLE001
