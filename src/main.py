@@ -4,7 +4,7 @@ import logging
 from pathlib import Path
 
 from src.loader import load_markdown
-from src.prompt_builder import PromptBuilder
+from prompt_builder import PromptBuilder
 from src.config.strategy_map import STRATEGY_MAP
 from src.config.task_map import TASK_MAP
 
