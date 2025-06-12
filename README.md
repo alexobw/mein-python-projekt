@@ -16,7 +16,7 @@ Alle Aktivitäten werden in `logs/prompt_builder.log` protokolliert.
    python prompt_runner.py --api <openai|claude|gemini>
    ```
 `prompt_runner.py` liest alle Dateien im `output`-Ordner ein, schickt sie über die gewählte API ab und speichert die Antworten unter `responses/<api>/<prompt>-response.md`. Ein detailliertes Log findet sich in `logs/prompt_runner.log`.
-Die Anbindung an die verschiedenen APIs erfolgt über ein flexibles Plugin-System. Eigene Plugins können unter `src/plugins` hinzugefügt werden.
+Die Anbindung an die verschiedenen APIs erfolgt über ein flexibles Plugin-System. Beim Import des Pakets `src.plugins` werden die vorhandenen Plugins automatisch geladen, sofern ihre Abhängigkeiten installiert sind. Eigene Plugins können unter `src/plugins` hinzugefügt werden.
 
 ## Benötigte Umgebungsvariablen
 

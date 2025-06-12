@@ -47,3 +47,13 @@ def register_plugin(name: str) -> callable:
         return cls
 
     return wrapper
+
+
+# Try to import default plugins so they register themselves.  Missing optional
+# dependencies are ignored so the package can be used without every API
+# library installed.
+for _plugin in ("openai_plugin", "claude_plugin", "gemini_plugin"):
+    try:  # pragma: no cover - optional imports
+        __import__(f"src.plugins.{_plugin}")
+    except Exception as exc:  # noqa: BLE001
+        logger.debug("Plugin %s not loaded: %s", _plugin, exc)
