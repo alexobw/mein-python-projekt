@@ -1,5 +1,7 @@
 from pathlib import Path
+import logging
 
+from src.logging_config import setup_logging
 from src.loader import load_markdown
 from src.prompt_builder import PromptBuilder
 from src.config.strategy_map import STRATEGY_MAP
@@ -8,6 +10,10 @@ from src.config.task_map import TASK_MAP
 
 def main() -> None:
     """Erzeuge alle Prompt-Kombinationen."""
+    setup_logging("logs/prompt_builder.log")
+    logger = logging.getLogger(__name__)
+    logger.info("Starte Prompt Builder")
+
     project_root = Path(__file__).resolve().parent
 
     structure_path = project_root / "data" / "strukturen" / "grundstruktur.md"
@@ -25,7 +31,9 @@ def main() -> None:
             out_dir.mkdir(parents=True, exist_ok=True)
             out_path = out_dir / f"{strategy}__{task}.md"
             out_path.write_text(prompt, encoding="utf-8")
-            print(f"✅ Prompt gespeichert unter: {out_path.resolve()}")
+            logger.info("Prompt gespeichert unter: %s", out_path.resolve())
+
+    logger.info("Prompt Builder beendet")
 
 
 if __name__ == "__main__":

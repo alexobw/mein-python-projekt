@@ -1,4 +1,5 @@
 import os
+import logging
 from dotenv import load_dotenv
 
 # API-Clients
@@ -7,6 +8,8 @@ import anthropic
 import google.generativeai as genai
 
 # .env einlesen
+logger = logging.getLogger(__name__)
+
 load_dotenv()
 
 # API-Keys auslesen
@@ -23,7 +26,10 @@ class ModelAPI:
         self._gemini_model = None
 
     def query_openai(self, prompt: str) -> str:
+        """Query OpenAI chat completion."""
+        logger.debug("Sende Prompt an OpenAI")
         if not OPENAI_API_KEY:
+            logger.error("OPENAI_API_KEY fehlt")
             raise ValueError("❌ OPENAI_API_KEY fehlt in .env")
 
         if not self._openai_client:
@@ -37,10 +43,14 @@ class ModelAPI:
             )
             return response.choices[0].message.content.strip()
         except Exception as exc:
+            logger.exception("OpenAI Anfrage fehlgeschlagen: %s", exc)
             raise RuntimeError(f"OpenAI Anfrage fehlgeschlagen: {exc}") from exc
 
     def query_claude(self, prompt: str) -> str:
+        """Query Anthropic Claude."""
+        logger.debug("Sende Prompt an Claude")
         if not ANTHROPIC_API_KEY:
+            logger.error("ANTHROPIC_API_KEY fehlt")
             raise ValueError("❌ ANTHROPIC_API_KEY fehlt in .env")
 
         if not self._anthropic_client:
@@ -55,10 +65,14 @@ class ModelAPI:
             )
             return response.content[0].text.strip()
         except Exception as exc:
+            logger.exception("Claude Anfrage fehlgeschlagen: %s", exc)
             raise RuntimeError(f"Claude Anfrage fehlgeschlagen: {exc}") from exc
 
     def query_gemini(self, prompt: str) -> str:
+        """Query Google Gemini."""
+        logger.debug("Sende Prompt an Gemini")
         if not GEMINI_API_KEY:
+            logger.error("GEMINI_API_KEY fehlt")
             raise ValueError("❌ GEMINI_API_KEY fehlt in .env")
 
         if not self._gemini_model:
@@ -72,4 +86,5 @@ class ModelAPI:
             )
             return response.text.strip()
         except Exception as exc:
+            logger.exception("Gemini Anfrage fehlgeschlagen: %s", exc)
             raise RuntimeError(f"Gemini Anfrage fehlgeschlagen: {exc}") from exc
