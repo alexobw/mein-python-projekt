@@ -41,6 +41,6 @@ def query_gemini():
 
 if __name__ == "__main__":
     # Du kannst hier beliebig die Funktionen einzeln aufrufen
-    #query_openai()
-    query_claude()
+    query_openai()
+    #query_claude()
     #query_gemini()

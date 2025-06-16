@@ -23,7 +23,7 @@ class OpenAIPlugin(BaseModelPlugin):
     def __init__(self) -> None:
         if not OPENAI_API_KEY:
             raise ValueError("OPENAI_API_KEY not set")
-        self._client = openai.Client(api_key=OPENAI_API_KEY)
+        self._client = openai.Client(api_key=OPENAI_API_KEY,  base_url="https://ai.exxeta.info")
 
     def query(self, prompt: str) -> str:
         logger.debug("Querying OpenAI")
